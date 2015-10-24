@@ -1,4 +1,0 @@
-
-If port is already in use:
-    lsof -n -i4TCP:8082
-    kill -9 <pid>
