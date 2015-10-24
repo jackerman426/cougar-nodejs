@@ -1,5 +1,5 @@
-# betjs
-Smart bot for betting in betfair
+# cougar
+Smart bot written in nodejs for betting in betfair
 
 
 
