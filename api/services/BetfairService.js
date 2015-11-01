@@ -1,5 +1,5 @@
 /**
- * Created by mariostzakris on 12/06/15.
+ * Created by jackerman on 12/06/15.
  */
 'use strict';
 var betfairClient = require('betfair');

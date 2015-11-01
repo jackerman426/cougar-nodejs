@@ -27,15 +27,18 @@ module.exports = {
                 })
             },
             function(eventIds, callback){
-                var params = {"filter": {
-                    "eventIds": eventIds,
-                    "textQuery": "Barclays"
-                },"maxResults": "200",
+                var params = {
+                    "filter": {
+                        "eventIds": eventIds
+                    },
+                    "maxResults": "200",
                     "marketProjection": [
                     "COMPETITION",
                     "EVENT",
-                    "EVENT_TYPE"
-                ]};
+                    "EVENT_TYPE",
+                    ],
+                    "sort": "MAXIMUM_AVAILABLE"
+                };
                 betfairService.listMarketCatalogue(params, function(error, marketIds){
                     if(error){
                         betLogger.error("Failed to get list of market info");
@@ -54,7 +57,7 @@ module.exports = {
                 //};
                 var params = {
                     "marketIds": [marketIds[0], marketIds[1]],
-                    "priceProjection":{"priceData":["EX_BEST_OFFERS"]},
+                    "priceProjection":{"priceData":["EX_ALL_OFFERS"]},
                     "orderProjection":"EXECUTABLE"
                 };
 
