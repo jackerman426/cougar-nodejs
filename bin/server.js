@@ -120,6 +120,7 @@ function connectToMongo(next){
 
   db.on('error', function (error) {
     betLogger.error(' MongoDB failed to connect');
+    next(error);
   });
 
   db.on('connecting', function () {

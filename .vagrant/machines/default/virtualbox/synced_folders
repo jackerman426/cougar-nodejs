@@ -1,0 +1,1 @@
+{"nfs":{"/app/node":{"nfs":true,"guestpath":"/app/node","hostpath":"/Users/mariostzakris/Workspace/cougar-nodejs","disabled":false,"type":"nfs","map_uid":503,"map_gid":20,"nfs_udp":true,"nfs_version":3,"uuid":"1966697617"}},"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/mariostzakris/Workspace/cougar-nodejs","disabled":false}}}
