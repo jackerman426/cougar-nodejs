@@ -8,27 +8,28 @@ module.exports = {
     /**
      * Calculates the outcome of the bet (back and lay)
      * @param {Number} odd
-     * @param {Number} price
+     * @param {Number} stake
      * @param {String} type
      * @param {callback} next - The callback that handles the response.
      * @return {Number} value
      */
-    calculateProfitPerBet : function(odd, price, type, next){
-        var value = null;
+        //this is nonsense
+    calculateProfitPerBet : function(odd, stake, type, next){
+        var profit = null;
         var error = null;
-        if(odd && price && type){
+        if(odd && stake && type){
             switch (type) {
                 case "back":
-                    value = odd * price;
+                    profit = odd * stake;
                     break;
                 case "lay":
-                    value = -price;
+                    profit = -stake;
                     break;
                 default :
                     error = apiErrorHelper.invalidArgumentProvidedError();
                     break;
             }
-            return next(error, value);
+            return next(error, profit);
         }else{
             return next(apiErrorHelper.invalidNumberOfArgumentsProvidedError(), null);
         }
