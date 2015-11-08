@@ -75,5 +75,21 @@ module.exports = {
             }
         })
     },
+    /**
+     * Calculates the outcome of the bet (back and lay)
+     * @param {object} params
+     * @param {callback} next - The callback that handles the response.
+     * @return {Number} value
+     */
+    placeBet: function(params, next){
+
+        session.placeOrders(params, function(error, res){
+            if(error){
+                next(error);
+            } else {
+              next(null, res);
+            }
+        })
+    }
 
 };
