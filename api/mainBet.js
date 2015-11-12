@@ -5,6 +5,7 @@
 var async = require('async');
 var betfairService = require('./services/BetfairService');
 
+
 var params = {
     filter:{}
 };
@@ -14,13 +15,35 @@ module.exports = {
     startBet : function(next) {
         async.waterfall([
             function(callback){
+                betfairService.login(function(error){
+                    if(error){
+                        betLogger.error("Login to betfair.com failed")
+                    }else{
+                        betLogger.info("Successfully logged in to betfair.com")
+                        callback(null);
+                    }
+                })
+            },
+            function(callback){
+                betfairService.listEvents(params, function(error, eventsIds){
+                    if(error){
+                        betLogger.error("Failed to get list of events");
+                        callback(error);
+                    }else{
+                        betLogger.info("Successfully retrieved list events");
+                        callback(null, eventsIds)
+
+                    }
+                })
+            },
+            function(eventsIds, callback){
                 var params = {filter: {eventTypeIds:["1"]}};
                 betfairService.listEvents(params, function(error, eventsIds){
                     if(error){
                         betLogger.error("Failed to get list of events");
                         callback(error);
                     }else{
-                        betLogger.info("Successfully retrieved list evetns");
+                        betLogger.info("Successfully retrieved list events");
                         callback(null, eventsIds)
 
                     }

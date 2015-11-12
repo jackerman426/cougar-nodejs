@@ -35,6 +35,9 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 
+#Vagrant
+/.vagrant
+
 application.log
 .env
 

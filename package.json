@@ -13,13 +13,14 @@
     "crypto": "~0.0.3",
     "debug": "~2.2.0",
     "errors": "~0.3.0",
+    "events": "^1.1.0",
     "express": "~4.13.0",
     "fs": "0.0.2",
     "jade": "~1.11.0",
+    "moment": "^2.10.6",
     "mongoose": "4.0.7",
     "morgan": "~1.6.1",
     "node-uuid": "~1.4.3",
-    "serve-favicon": "~2.3.0",
     "winston": "1.0.1"
   }
 }

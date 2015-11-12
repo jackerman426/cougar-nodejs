@@ -10,7 +10,6 @@ var http = require('http');
 var mongoose = require('mongoose');
 var winston = require("winston");
 var async = require('async');
-var betfairService = require('../api/services/BetfairService');
 
 var mongoUrl = process.env.MONGOLAB_URI;
 var mongoOptions = {
@@ -50,17 +49,6 @@ async.series([
       connectToMongo(function(error){
         callback(error)
       })
-    },
-    function(callback){
-      betfairService.login(function(error){
-        if(error){
-          betLogger.error("Login to betfair.com failed")
-          callback(error)
-        }else{
-          betLogger.info("Successfully logged in to betfair.com");
-          callback(null)
-        }
-      });
     }
 ], function(error){
   if(error) {
@@ -102,6 +90,7 @@ var betLogger = new (winston.Logger)({
 });
 
 global['betLogger'] = betLogger;
+global['loginMoment'] = {expirationDate: null};
 
 
 function connectToMongo(next){
