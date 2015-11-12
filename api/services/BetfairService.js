@@ -3,10 +3,16 @@
  */
 'use strict';
 var betfairClient = require('betfair');
-var betfairAppKey = process.env.BETFAIR_DELAYED_APIKEY;
+var fs = require('fs');
+var betfairAppKey = process.env['BETFAIR_DELAYED_APIKEY'];
 
+var sslOptions = {
+    key: fs.readFile('client-2048.key'),
+    cert: fs.readFile('client-2048.crt')
+}
 //create session for betfair
 var session = betfairClient.newSession(betfairAppKey);
+session.setSslOptions(sslOptions);
 
 var credentials = {
     username: process.env.username,
