@@ -5,6 +5,7 @@
 var async = require('async');
 var betfairService = require('./services/BetfairService');
 
+
 var params = {
     filter:{}
 };
@@ -14,28 +15,53 @@ module.exports = {
     startBet : function(next) {
         async.waterfall([
             function(callback){
+                betfairService.login(function(error){
+                    if(error){
+                        betLogger.error("Login to betfair.com failed")
+                    }else{
+                        betLogger.info("Successfully logged in to betfair.com")
+                        callback(null);
+                    }
+                })
+            },
+            function(callback){
+                betfairService.listEvents(params, function(error, eventsIds){
+                    if(error){
+                        betLogger.error("Failed to get list of events");
+                        callback(error);
+                    }else{
+                        betLogger.info("Successfully retrieved list events");
+                        callback(null, eventsIds)
+
+                    }
+                })
+            },
+            function(eventsIds, callback){
                 var params = {filter: {eventTypeIds:["1"]}};
                 betfairService.listEvents(params, function(error, eventsIds){
                     if(error){
                         betLogger.error("Failed to get list of events");
                         callback(error);
                     }else{
-                        betLogger.info("Successfully retrieved list evetns");
+                        betLogger.info("Successfully retrieved list events");
                         callback(null, eventsIds)
 
                     }
                 })
             },
             function(eventIds, callback){
-                var params = {"filter": {
-                    "eventIds": eventIds,
-                    "textQuery": "Barclays"
-                },"maxResults": "200",
+                var params = {
+                    "filter": {
+                        "eventIds": eventIds
+                    },
+                    "maxResults": "200",
                     "marketProjection": [
                     "COMPETITION",
                     "EVENT",
-                    "EVENT_TYPE"
-                ]};
+                    "EVENT_TYPE",
+                    ],
+                    "sort": "MAXIMUM_AVAILABLE"
+                };
                 betfairService.listMarketCatalogue(params, function(error, marketIds){
                     if(error){
                         betLogger.error("Failed to get list of market info");
@@ -54,7 +80,7 @@ module.exports = {
                 //};
                 var params = {
                     "marketIds": [marketIds[0], marketIds[1]],
-                    "priceProjection":{"priceData":["EX_BEST_OFFERS"]},
+                    "priceProjection":{"priceData":["EX_ALL_OFFERS"]},
                     "orderProjection":"EXECUTABLE"
                 };
 

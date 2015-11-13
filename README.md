@@ -1,2 +1,2 @@
 # cougar
-Smart bot for betting in betfair
+Smart bot written in nodejs for betting in betfair
