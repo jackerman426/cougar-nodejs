@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
                 betfairService.login(function(error){
                     return next(error);
                 })
-            }{
+            } else {
                 return next(null);
             }
         })
