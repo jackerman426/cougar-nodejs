@@ -7,26 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('betjs:server');
 var http = require('http');
-var mongoose = require('mongoose');
 var winston = require("winston");
-var async = require('async');
 
-var mongoUrl = process.env.MONGOLAB_URI;
-var mongoOptions = {
-  server: {
-    auto_reconnect: true, //default
-    socketOptions: {
-      keepAlive: 1,
-      connectTimeoutMS: 30000
-    }
-  },
-  replset: {
-    socketOptions: {
-      keepAlive: 1,
-      connectTimeoutMS: 30000
-    }
-  }
-};
+var mongoController = require('../lib/connections/MongoController');
+
+
 
 /**
  * Get port from environment and store in Express.
@@ -38,24 +23,40 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
 
 
+/**
+ * Establish connection to mongoDB
+ */
+var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost/cougar';
+mongoController.initialize(mongoUrl);
+mongoController.connect();
+
+// Initialize mongoose event listeners
+mongoController.db.on(mongoController.MONGO_EVENTS.OPEN, function (error) {
+
+  betLogger.info("Mongo connection has opened");
+  startApiService();
+});
+
+mongoController.db.on(mongoController.MONGO_EVENTS.CONNECTING, function (error) {
+
+  betLogger.info("Mongo is connecting..");
+
+});
 
 
-async.series([
-    function(callback){
-      connectToMongo(function(error){
-        callback(error)
-      })
-    }
-], function(error){
-  if(error) {
-    betLogger.error(error);
-  }else{
-      startApiService();
-    }
+mongoController.db.on(mongoController.MONGO_EVENTS.RECONNECTED, function (error) {
+
+  betLogger.info("Mongo is reconnected");
+
+});
+
+mongoController.db.on(mongoController.MONGO_EVENTS.ERROR, function (error) {
+
+  betLogger.error(error);
+
 });
 
 
@@ -93,29 +94,11 @@ global['betLogger'] = betLogger;
 global['loginMoment'] = {expirationDate: null};
 
 
-function connectToMongo(next){
-  /**
-   * Connect to mongodb mongoose
-   */
 
-  mongoose.connect(mongoUrl, mongoOptions);
-  var db = mongoose.connection;
 
-// Initialize mongoose event listeners
-  db.once('open', function () {
-    betLogger.info("MongoDB connection opened")
-    next(null)
-  });
 
-  db.on('error', function (error) {
-    betLogger.error(' MongoDB failed to connect');
-    next(error);
-  });
 
-  db.on('connecting', function () {
-    betLogger.info("MongoDB connecting");
-  });
-}
+
 
 
 function startApiService() {

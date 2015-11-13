@@ -3,10 +3,11 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var betfairService = require('./api/services/BetfairService');
 var moment = require('moment');
 var routes = require('./routes/index');
 var bets = require('./routes/bet');
+
+var betfairService = require('./api/services/BetfairService');
 
 var app = express();
 
